@@ -1,9 +1,9 @@
-.vagrant
-/cookbooks
 
-# Bundler
-bin/*
-.bundle/*
+./vscode/
+.vscode/*
 
-.kitchen/
-.kitchen.local.yml
+# Ignore everything in DoublePointer_linklist except .cc files
+/DoublePointer_linklist/*
+!/DoublePointer_linklist/*.cc
+
+
