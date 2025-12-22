@@ -13,5 +13,5 @@
 
 | https://github.com/krahets/hello-algo/   | hello算法 |
 | ----------- | ----------- |
-| https://labuladong.online/zh/roadmap/   | labuladong算法小抄      |
-|https://leetcode.cn/studyplan/top-100-liked/   | leetcode百题挑战        |
+|  https://labuladong.online/zh/roadmap/   | labuladong算法小抄      |
+|  https://leetcode.cn/studyplan/top-100-liked/   | leetcode百题挑战        |
