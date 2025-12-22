@@ -106,6 +106,9 @@ public:
         else {
             ListNode* newNode = new ListNode(val);
             ListNode* current = head;
+            for(size_t i{}; i < index; ++i) {
+                current = current->next;
+            }
 
         }
         
