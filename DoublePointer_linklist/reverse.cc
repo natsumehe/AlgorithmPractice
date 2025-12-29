@@ -14,6 +14,9 @@ class Solution {
         return last;
     }
 
+    /// @brief 迭代实现
+    /// @param head 
+    /// @return pre
     SingleListNode<int>::ListNode* reverseList_iteration(SingleListNode<int>::ListNode* head){
         SingleListNode<int>::ListNode* pre = nullptr;
         SingleListNode<int>::ListNode* cur = head;
