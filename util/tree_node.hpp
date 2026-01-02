@@ -1,171 +1,167 @@
-#include <iostream>
-#include "../util/list_node.hpp"
+#pragma once
 
-using namespace std;
+#include <vector>
+#include <queue>
+#include <stack>
 
-//创建二叉树结构
-template<typename T>
-class Tree{
-    public:
-    struct TreeNode
-    {
+class BinaryTree {
+public:
+    // 二叉树节点定义
+    struct TreeNode {
         int val;
         TreeNode* left;
         TreeNode* right;
-        TreeNode(): val(0),left(nullptr),right(nullptr) {}
+
+        TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        TreeNode(int x, TreeNode* left, TreeNode* right)
+            : val(x), left(left), right(right) {}
     };
+
+    static TreeNode* createTree() {
+
+        TreeNode* root = new TreeNode(0);
+        root -> left = new TreeNode(1);
+        root -> right = new TreeNode(2);
+        root -> left -> left = new TreeNode(3);
+        root -> left -> right = new TreeNode(4);
+        root -> right -> left = new TreeNode(5);
+        root -> right -> right = new TreeNode(6);
+
+        return root;
+    }
     
-    // 创建一个二叉树
-    TreeNode* createTree(){
-        /*
-        构建如下二叉树：
-              1
-            /   \
-           2     3
-            \   / \
-             6 4  5
-        */
-        TreeNode* root = new TreeNode(1)
-        root->left = new TreeNode(2)
-        root->right = new TreeNode(3)
-        root->right->right = new TreeNode(4)
-        root->right->left = new TreeNode(5)
-        root->left->rigth = new TreeNode(6)
+    // 从层序遍历的 vector 构建二叉树（-1 表示 null）
+    static TreeNode* createFromVector(const std::vector<int>& vals) {
+        if (vals.empty() || vals[0] == -1) {
+            return nullptr;
+        }
+
+        TreeNode* root = new TreeNode(vals[0]);
+        std::queue<TreeNode*> q;
+        q.push(root);
+
+        size_t i = 1;
+        while (!q.empty() && i < vals.size()) {
+            TreeNode* node = q.front();
+            q.pop();
+
+            // 左子节点
+            if (i < vals.size() && vals[i] != -1) {
+                node->left = new TreeNode(vals[i]);
+                q.push(node->left);
+            }
+            ++i;
+
+            // 右子节点
+            if (i < vals.size() && vals[i] != -1) {
+                node->right = new TreeNode(vals[i]);
+                q.push(node->right);
+            }
+            ++i;
+        }
+
         return root;
     }
 
-    /// @brief 按照层序遍历从vector数组中创建数组
-    /// @param vals 数组vector
-    /// @return treenode
-    TreeNode* createTreeformvector(const vector<int> &vals){
-        if (vals.empty() || vals[0] == -1) return nullptr;
-
-        TreeNode* root = new TreeNode(vals[0]);
-        queue<TreeNode*> q;  //使用队列的先进先出
-        q.push(root)
-
-        size_t i = 1
-        while(!q.empty() && i< vals.size()){
-            TreeNode* node = q.front();
-            q.pop();
-    
-            if( i < vals.size() && vals[i] != -1){
-                node->left = TreeNode(vlas[i]);
-                q.push();
-            }
-            i++
-
-            if( i < vals.size() && vals[i] != -1){
-                node->right = TreeNode(vlas[i]);
-                q.push();
-            }
-            i++
-    }
-    return root;
-}
-    void deletNode(TreeNode* root){
-        if(!root) return ;
-        deletNode (root->left);
-        deletNode (root->right);
+    // 释放整棵树的内存（后序递归删除）
+    static void deleteTree(TreeNode* root) {
+        if (!root) return;
+        deleteTree(root->left);
+        deleteTree(root->right);
         delete root;
     }
 
-    // 递归实现
-    /// @brief 前序遍历
-    /// @param root 
-    /// @param res 
-    void preorderRec(TreeNode* root, vector<int> &res){
-        if(!root) return;
-        res.back(root->val);
-        preorderPrint(root->left, res);
-        preorderPrint(root->right, res);
-    }
+    // ========== 遍历函数（返回 vector<int>） ==========
 
-    /// @brief 中序遍历
-    /// @param root 
-    /// @param res 
-    void inorderRec(TreeNode* root, vector<int> &res){
-        if(!root) return;
-        inorderPrint(root->left, res);
-        res.back(root->val);
-        inorderPrint(root->right, res);
-    }
-
-    /// @brief 后序遍历
-    /// @param root 
-    /// @param res 
-    void postorderRec(TreeNode* root, vector<int> &res){
-        if(!root) return;
-        postorderPrint(root->left, res);
-        postorderPrint(root->right, res);
-        res.back(root->val);
-    }
-
-    //迭代
-    /// @brief 前序遍历
-    /// @param root 
-    void preorderiter(TreeNode* root){
-        if(!root) return;
-        vector<int> &res ,stack<TreeNode*> &s;
+    // 前序遍历 - 迭代
+    static std::vector<int> preorderIter(TreeNode* root) {
+        std::vector<int> res;
+        if (!root) return res;
+        std::stack<TreeNode*> s;
         s.push(root);
-        while(!s.empty()){
-            TreeNode* node = s.top(); s.pop();
+        while (!s.empty()) {
+            TreeNode* node = s.top();
+            s.pop();
             res.push_back(node->val);
-            if(node->left) s.push(node->left);
-            if(node->right) s.push(node->right);
+            // 先压右，再压左（栈 LIFO）
+            if (node->right) s.push(node->right);
+            if (node->left) s.push(node->left);
         }
         return res;
     }
-<<<<<<< HEAD
 
-    /// @brief 中序遍历
-    /// @param root 
-    void inorderiter(TreeNode* root){
-        if(!root) return;
-        vector<int> &res;
-        stack<int> &s;
-        TreeNode curr = root;
-        while(curr || !s.empty()){
-            while(curr){
+    // 中序遍历 - 迭代
+    static std::vector<int> inorderIter(TreeNode* root) {
+        std::vector<int> res;
+        std::stack<TreeNode*> s;
+        TreeNode* curr = root;
+
+        while (curr != nullptr || !s.empty()) {
+            // 一路向左
+            while (curr != nullptr) {
                 s.push(curr);
                 curr = curr->left;
             }
+            // 弹出栈顶
             curr = s.top();
             s.pop();
             res.push_back(curr->val);
+            // 转向右子树
             curr = curr->right;
         }
         return res;
     }
 
-    /// @brief 后序遍历
-    /// @param root 
-    void postorderiter(TreeNode* root){
-        if(!root) return;
-        vector<int> &res;
-        stack<int> & s;
+    // 后序遍历 - 迭代（使用一个栈 + 记录上一个访问节点）
+    static std::vector<int> postorderIter(TreeNode* root) {
+        std::vector<int> res;
+        if (!root) return res;
+        std::stack<TreeNode*> s;
         TreeNode* curr = root;
-        TreeNode* lastVistied = nullptr;
-        while(!s.empty() || curr){
-            if(curr) {
+        TreeNode* lastVisited = nullptr;
+
+        while (!s.empty() || curr != nullptr) {
+            if (curr != nullptr) {
                 s.push(curr);
                 curr = curr->left;
-            }else{
+            } else {
                 TreeNode* peek = s.top();
-                if(peek->right && lastVistied != peek->right){
+                // 如果右子树存在且未被访问过
+                if (peek->right != nullptr && lastVisited != peek->right) {
                     curr = peek->right;
-                }else{
+                } else {
                     res.push_back(peek->val);
-                    lastVistied = peek;
+                    lastVisited = peek;
                     s.pop();
                 }
-
             }
-
         }
         return res;
     }
 
-=======
->>>>>>> 1638eb4 (🌱feet: 144题 94题  145题 前序 中序 后序遍历 迭代+递归)
+
+    // ========== 递归遍历（简洁，用于对比） ==========
+
+    static void preorderRec(TreeNode* root, std::vector<int>& res) {
+        if (!root) return;
+        res.push_back(root->val);
+        preorderRec(root->left, res);
+        preorderRec(root->right, res);
+    }
+
+    static void inorderRec(TreeNode* root, std::vector<int>& res) {
+        if (!root) return;
+        inorderRec(root->left, res);
+        res.push_back(root->val);
+        inorderRec(root->right, res);
+    }
+
+    static void postorderRec(TreeNode* root, std::vector<int>& res) {
+        if (!root) return;
+        postorderRec(root->left, res);
+        postorderRec(root->right, res);
+        res.push_back(root->val);
+    }
+>>>>>>> 17f9cea (:recycle: chore: 二叉树相关重构和代码修改)
 };
