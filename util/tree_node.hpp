@@ -208,5 +208,5 @@ public:
     }
 
     
-    static void Npreorder()
+    static void Npreorder(){}
 };
