@@ -18,6 +18,27 @@ public:
             : val(x), left(left), right(right) {}
     };
 
+    //孩子列表表示法
+    struct TreeNodeChildren{
+        int val;
+        std::vector<std::shared_ptr<TreeNodeChildren>> children;
+
+        TreeNodeChildren() {}
+        TreeNodeChildren(int _val) : val(_val) {}
+        TreeNodeChildren(int _val, const std::vector<std::shared_ptr<TreeNodeChildren>>& _children)
+        : val(_val), children(_children) {}
+    };
+
+    //孩子兄弟表示法
+    struct CSNode {
+        int val;
+        CSNode* firstChild;   // 第一个孩子（相当于 left）
+        CSNode* nextSibling;  // 下一个兄弟（相当于 right）
+
+        CSNode(int _val) : val(_val), firstChild(nullptr), nextSibling(nullptr) {}
+    };
+    
+
     static TreeNode* createTree() {
 
         TreeNode* root = new TreeNode(0);
@@ -185,4 +206,7 @@ public:
         postorderRec(root->right, res);
         res.push_back(root->val);
     }
+
+    
+    static void Npreorder()
 };
