@@ -3,7 +3,7 @@ package search
 // / Binary Search Algorithm
 // / Time Complexity: O(log n)
 // / Space Complexity: O(1)
-func binarysearch(nums []int, target int) int {
+func BinarySearch(nums []int, target int) int {
 	left, right := 0, len(nums)-1
 	for left <= right {
 		mid := left + (right-left)/2

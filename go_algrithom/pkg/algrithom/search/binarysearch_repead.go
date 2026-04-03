@@ -1,6 +1,6 @@
 package search
 
-func binarysearch_repead(nums []int, target int) int {
+func BinarySearchRepeated(nums []int, target int) int {
 	left, right := 0, len(nums)-1
 	ans := -1
 
