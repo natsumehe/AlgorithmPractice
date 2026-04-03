@@ -11,3 +11,6 @@
 !/binary_tree/*.cc
 !/binary_tree/*.md
 !/binary_tree/*.py
+
+/resume/*
+.DS_Store
